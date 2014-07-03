@@ -1,5 +1,7 @@
+# Do not include user's local data or history info
 .RData
 .Rhistory
 
+# Do not include uncompressed data (inefficient, and exceeds GitHub's 100M file limit)
 NFLData_2000-2013/
 NFLData_2012_WK1-8/
