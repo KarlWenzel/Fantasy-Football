@@ -38,13 +38,13 @@ types, which are explained in the next table thereafter.
 | NH | yType | No Huddle occured |  
 | PTS | int | Points scored on play (negative means defense scored) | NA 
 | BC | playerID | Ball Carrier (foreign key) on RUSH play |  
-| KNE | yType | QB took a Knee on the play |  
+| KNE | yType | QB took a Knee on RUSH play |  
 | DIR | rushDir | On rush play, the Direction that  the runner ran (in terms of oline) |  
 | RTCK1 | playerID | Rushing play Tackler 1 |  
 | RTCK2 | playerID | Rushing play Tackler 2 |  
 | PSR | playerID | Passer on PASS play |  
-| COMP | yType | pass was Compleete on PASS play |  
-| SPK | yType | ball was Spiked to kill clock |  
+| COMP | yType | pass was Complete on PASS play |  
+| SPK | yType | ball was Spiked to kill clock on PASS play |  
 | LOC | passLoc | general Location of pass target |  
 | TRG | playerID | pass Target |  
 | DFB | playerID | pass Defensive Back that performed successful action |  
@@ -100,16 +100,16 @@ types, which are explained in the next table thereafter.
 | LG | playerID | player who was Left Guard |  
 | C | playerID | player who was Center |  
 | RG | playerID | player who was Right Guard |  
-| RT | playerID | player who was Right Tackle |  
+| RT | playerID | player who was Right Tackle | 
 
 ### User-Defined Column Types
 
-| Type | Description | Notes
+| Type | Description | Notes 
 | -----  | -----  | ----- 
-| playType | string: { CONV, FGXP, KOFF , NOPL, ONSD, PASS, PUNT, RUSH } | CONV == 2 pt conversion 
+| playType | string: { CONV , FGXP , KOFF , NOPL , ONSD , PASS , PUNT , RUSH } | CONV == 2 pt conversion 
 | yType | string: { Y , <empty string> } |  
 | nyType | string: { N , Y , <empty string> } |  
 | playerID | string: follows pattern: [a-z][a-z]-[0-9][0-9][0-9][0-9] | first two letters are player's first and last name initials 
 | rushDir | string: direction runner ran { LE, RE, LG, RG, LT, RT, MD, NL } | End, Guard, Tackle, Middle, Not Listed 
 | passLoc | string: pass location { SM, SL, SR, DM, DL, DR, NL } | Short/Deep Left/Middle/Right, Not Listed.  note deep means 15+ yards from scrimmage 
-| penCat | int: 1 - False Start; 2 - Offensive Holding; 3 - Play Book Execution; 4 - Defensive Line; 5 - Defensive Secondary; 6 - Dumb; 7 - Poor Fundamentals (Blocking/Tackling); 8 - Other |  
+| penCat | int: 1 - False Start; 2 - Offensive Holding; 3 - Play Book Execution; 4 - Defensive Line; 5 - Defensive Secondary; 6 - Dumb; 7 - Poor Fundamentals (Blocking/Tackling); 8 - Other | 
