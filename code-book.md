@@ -1,4 +1,14 @@
-##Flat File.csv (i.e. plays)
+##Code Book: Explanation of Variables
+
+Most of the csv files present in the uncompressed raw data from 
+[Armchair Analysis.com](http://www.armchairanalysis.com/) is organized in way conducive
+for loading into a relational database system, however they have also joined ("flattened") the data from most of 
+these tables into a single, large file named "Flat File.csv".  This is the primary file of interest for our project, as it is easy to load the large table into an R data frame, which shall be named *plays*.
+
+###Plays
+
+The following table describes every column in the *plays* data frame.  Note that many columns have user-defined
+types, which are explained in the next table thereafter.
 
 | Code | Type | Description | Example Data 
 | -----  | -----  | -----  | ----- 
@@ -92,10 +102,11 @@
 | RG | playerID | player who was Right Guard |  
 | RT | playerID | player who was Right Tackle |  
 
-### Types
+### User-Defined Column Types
 
-| playType | string: { CONV, FGXP, KOFF , NOPL, ONSD, PASS, PUNT, RUSH } | CONV == 2 pt conversion 
+| Type | Description | Notes
 | -----  | -----  | ----- 
+| playType | string: { CONV, FGXP, KOFF , NOPL, ONSD, PASS, PUNT, RUSH } | CONV == 2 pt conversion 
 | yType | string: { Y , <empty string> } |  
 | nyType | string: { N , Y , <empty string> } |  
 | playerID | string: follows pattern: [a-z][a-z]-[0-9][0-9][0-9][0-9] | first two letters are player's first and last name initials 
