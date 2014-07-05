@@ -91,3 +91,14 @@
 | C | playerID | player who was Center |  
 | RG | playerID | player who was Right Guard |  
 | RT | playerID | player who was Right Tackle |  
+
+### Types
+
+| playType | string: { CONV, FGXP, KOFF , NOPL, ONSD, PASS, PUNT, RUSH } | CONV == 2 pt conversion 
+| -----  | -----  | ----- 
+| yType | string: { Y , <empty string> } |  
+| nyType | string: { N , Y , <empty string> } |  
+| playerID | string: follows pattern: [a-z][a-z]-[0-9][0-9][0-9][0-9] | first two letters are player's first and last name initials 
+| rushDir | string: direction runner ran { LE, RE, LG, RG, LT, RT, MD, NL } | End, Guard, Tackle, Middle, Not Listed 
+| passLoc | string: pass location { SM, SL, SR, DM, DL, DR, NL } | Short/Deep Left/Middle/Right, Not Listed.  note deep means 15+ yards from scrimmage 
+| penCat | int: 1 - False Start; 2 - Offensive Holding; 3 - Play Book Execution; 4 - Defensive Line; 5 - Defensive Secondary; 6 - Dumb; 7 - Poor Fundamentals (Blocking/Tackling); 8 - Other |  
