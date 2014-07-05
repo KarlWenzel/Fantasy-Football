@@ -41,21 +41,46 @@ passPlayCols <- c(
 getRushPlays <- function()
 {
   plays <- getRaw$plays()
-  plays[ plays$TYPE=="RUSH", rushPlayCols ]
+  plays[ plays$TYPE=="RUSH" & plays$KNE!="Y", rushPlayCols ]
 }
 
 getPassPlays <- function()
 {
-  plays <- getRaw$plays()
-  plays[ plays$TYPE=="PASS", passPlayCols ]
+  plays <- getRaw$plays()  
+  plays[ plays$TYPE=="PASS" & plays$SPK!="Y", passPlayCols ]
 }
 
-plot3downConvs <- function(rushPlays)
+plotTeamYPC <- function(plays)
 {
-  fd <- na.omit(rushPlays[ rushPlays$DWN==3, "FD" ])  
-  size <- length( fd )
-  succ <- length( fd[ fd=='Y' ] )
-  prob <- succ / size
-  x <- seq(0, size)
-  plot( x/size, dbinom(x, size, prob) )
+  
+}
+
+plotNthDownConvs <- function(plays, down)
+{
+  size <- nrow( plays[ plays$DWN==down, ] )
+  succ <- nrow( plays[ plays$DWN==down & plays$FD=="Y", ] )
+  plotBinomLikelihood(size, succ, paste("Likelihood of First Down Occuring when Down =", down) )
+}
+
+plotBinomLikelihood <- function(size, successes, plotTitle="")
+{  
+  # Recall that likelihood is merely a relative measure (and unit-less).
+  # The Maximum Likelihood Estimate may be used to scale the range into [0,1]  
+  # Crank out a sequence of probability quantiles from [0,1] as the domain for our plot
+  # and create a vector of their relative likelihoods
+  
+  mle <- successes / size
+  domain <- seq(0, 1, length.out=1000)
+  likeMax <- dbinom(successes, size, mle)
+  likeRange <- (1/likeMax) * dbinom(successes, size, domain)  
+  
+  plot(
+    x = domain,
+    y = likeRange,
+    type = "l",
+    xlab = paste( "Probability (note MLE =", as.character(mle), ")"),
+    ylab = "Normalized Likelihood"
+  )
+  title(plotTitle)
+  abline( v=mle, col=3 )
 }
