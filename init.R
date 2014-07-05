@@ -3,15 +3,17 @@ library(data.table)
 fRoot <- "./NFLData_2012_WK1-8/"
 
 fPath <- list(
-  plays   = paste(fRoot, 'FLAT FILE.csv', sep=""),
-  games   = paste(fRoot, 'GAMES.csv', sep=""),
-  players = paste(fRoot, 'PLAYERS.csv', sep="")
+  plays   = paste(fRoot, "FLAT FILE.csv", sep=""),
+  games   = paste(fRoot, "GAMES.csv", sep=""),
+  players = paste(fRoot, "PLAYERS.csv", sep=""),
+  teams   = paste(fRoot, "TEAM.csv", sep="")
 )
 
 getRaw <- list(
   plays   = function() read.csv(fPath$plays),
   games   = function() read.csv(fPath$games),
-  players = function() read.csv(fPath$players)
+  players = function() read.csv(fPath$players),
+  teams   = function() read.csv(fPath$teams)
 )
 
 basePlaysCols <- c(
@@ -50,16 +52,33 @@ getPassPlays <- function()
   plays[ plays$TYPE=="PASS" & plays$SPK!="Y", passPlayCols ]
 }
 
-plotTeamYPC <- function(plays)
+plotTeamRushYPC <- function(rushPlays, games)
 {
+  p <- merge( rushPlays, games[, c("GID","SEAS")], by="GID" )
+  p <- split( p, list( p$OFF, p$SEAS) )
+  teamYPC <- sapply(p, function(x) mean( x[ !is.na(x$YDS), "YDS" ] ) )
+  teamYPC <- sort(teamYPC)
   
+  u <- mean(teamYPC)
+  s <- sqrt(var(teamYPC))
+  domain <- seq( min(teamYPC)-1, max(teamYPC)+1, length.out=1000)
+  range <- dnorm(domain, u, s)
+  
+  plot(
+    x = domain,
+    y = range,
+    type = "l",
+    xlab = "Yards per Carry",
+    ylab = "Relative Likelihood"
+  )
+  abline( v=u, col=3 )
 }
 
 plotNthDownConvs <- function(plays, down)
 {
   size <- nrow( plays[ plays$DWN==down, ] )
   succ <- nrow( plays[ plays$DWN==down & plays$FD=="Y", ] )
-  plotBinomLikelihood(size, succ, paste("Likelihood of First Down Occuring when Down =", down) )
+  plotBinomLikelihood(size, succ, paste("Likelihood of Probability of First Down Occuring when Down =", down) )
 }
 
 plotBinomLikelihood <- function(size, successes, plotTitle="")
