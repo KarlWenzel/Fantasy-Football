@@ -14,11 +14,40 @@ getRaw <- list(
   players = function() read.csv(fPath$players)
 )
 
+basePlaysCols <- c(
+  "GID",  "PID",  "DETAIL",  "OFF",  "DEF",
+  "DSEQ",  "LEN",  "QTR",  "MIN",  "SEC",
+  "PTSO",  "PTSD",  "TIMO",  "TIMD",  "DWN",
+  "YTG",  "YFOG",  "ZONE",  "YDS",  "SUCC",
+  "FD",  "SG",  "NH",  "PTS"  
+)
+
+rushPlayCols <- c(
+  basePlaysCols,
+  "BC", "KNE", "DIR", "RTCK1", "RTCK2",
+  "FUM", "FRCV", "FRY", "FORC", "SAF",
+  "LT", "LG", "C", "RG", "RT"  
+)
+
+passPlayCols <- c(
+  basePlaysCols,
+  "PSR", "COMP", "SPK", "LOC", "TRG",
+  "DFB", "PTCK1", "PTCK2", "SK1", "SK2",
+  "INT", "IRY",
+  "FUM", "FRCV", "FRY", "FORC", "SAF",
+  "LT", "LG", "C", "RG", "RT"  
+)
+
 getRushPlays <- function()
 {
   plays <- getRaw$plays()
-  splitPlays <- split( plays, plays$TYPE ) # { CONV|FGXP|KOFF|NOPL|ONSD|PASS|PUNT|RUSH }
-  rushPlays <- splitPlays$RUSH
+  plays[ plays$TYPE=="RUSH", rushPlayCols ]
+}
+
+getPassPlays <- function()
+{
+  plays <- getRaw$plays()
+  plays[ plays$TYPE=="PASS", passPlayCols ]
 }
 
 plot3downConvs <- function(rushPlays)
