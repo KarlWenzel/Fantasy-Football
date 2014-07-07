@@ -58,20 +58,7 @@ plotTeamRushYPC <- function(rushPlays, games)
   p <- split( p, list( p$OFF, p$SEAS) )
   teamYPC <- sapply(p, function(x) mean( x[ !is.na(x$YDS), "YDS" ] ) )
   teamYPC <- sort(teamYPC)
-  
-  u <- mean(teamYPC)
-  s <- sqrt(var(teamYPC))
-  domain <- seq( min(teamYPC)-1, max(teamYPC)+1, length.out=1000)
-  range <- dnorm(domain, u, s)
-  
-  plot(
-    x = domain,
-    y = range,
-    type = "l",
-    xlab = "Yards per Carry",
-    ylab = "Relative Likelihood"
-  )
-  abline( v=u, col=3 )
+  plotNormDist( teamYPC, min(teamYPC)-1, max(teamYPC)+1, "Yards per Carry", "YPC Distribution" )
 }
 
 plotNthDownConvs <- function(plays, down)
@@ -79,6 +66,24 @@ plotNthDownConvs <- function(plays, down)
   size <- nrow( plays[ plays$DWN==down, ] )
   succ <- nrow( plays[ plays$DWN==down & plays$FD=="Y", ] )
   plotBinomLikelihood(size, succ, paste("Likelihood of Probability of First Down Occuring when Down =", down) )
+}
+
+plotNormDist <- function(values, minX, maxX, xLabel, plotTitle)
+{  
+  u <- mean(values)
+  s <- sqrt( var(values) )
+  domain <- seq(minX, maxX, length.out=1000)
+  range <- dnorm(domain, u, s)
+  
+  plot(
+    x = domain,
+    y = range,
+    type = "l",
+    xlab = xLabel,
+    ylab = "Density"
+  )
+  title(plotTitle)
+  abline( v=u, col=3 )
 }
 
 plotBinomLikelihood <- function(size, successes, plotTitle="")
