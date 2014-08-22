@@ -1,5 +1,8 @@
 # Assumes init.R is sourced
-# Assumes play <- getRaw$plays()
+#
+# Assumes df.play <- getRaw$plays()
+#         df.games <- getRaw$games()
+#         df.players <- getRaw$players()
 
 library(data.table)
 
@@ -35,6 +38,9 @@ run <- function(df.plays, df.games, df.players)
     .SDcols = c(sdCols, "GameCount"), 
     by = c("PlayerID", "Name", "Position", "Season")
   ]
+  
+  write.csv(g, file="./data/GameSums.csv")
+  write.csv(y, file="./data/YearSums.csv")
   
   list("gameSums"=dt.gameSums, "yearSums"=dt.yearSums)
 }

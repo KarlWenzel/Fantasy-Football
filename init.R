@@ -1,4 +1,4 @@
-library(data.table)
+
 
 fRoot <- "./NFLData_2012_WK1-8/"
 
