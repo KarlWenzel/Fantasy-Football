@@ -33,7 +33,7 @@ run <- function(df.plays, df.games, df.players)
   
   dt.gameSums$GameCount = 1
   
-  dt.yearSums <- dt.gameSums[, 
+  dt.yearSums <- dt.gameSums[ dt.gameSums$Week <= 17, 
     lapply(.SD, sum), 
     .SDcols = c(sdCols, "GameCount"), 
     by = c("PlayerID", "Name", "Position", "Season")
@@ -45,12 +45,12 @@ run <- function(df.plays, df.games, df.players)
   list("gameSums"=dt.gameSums, "yearSums"=dt.yearSums)
 }
 
-buildBestPlayers <- function(dt.yearSums, season)
+buildBestPlayers <- function(dt.gameSums, dt.yearSums, season)
 {
-  dt.topQBs <- build_X_best_Y_pos(dt.yearSums, 25, "QB", season)
-  dt.topRBs <- build_X_best_Y_pos(dt.yearSums, 50, "RB", season)
-  dt.topWRs <- build_X_best_Y_pos(dt.yearSums, 50, "WR", season)
-  dt.topTEs <- build_X_best_Y_pos(dt.yearSums, 25, "TE", season)
+  dt.topQBs <- build_X_best_Y_pos(dt.gameSums, dt.yearSums, 25, "QB", season)
+  dt.topRBs <- build_X_best_Y_pos(dt.gameSums, dt.yearSums, 50, "RB", season)
+  dt.topWRs <- build_X_best_Y_pos(dt.gameSums, dt.yearSums, 50, "WR", season)
+  dt.topTEs <- build_X_best_Y_pos(dt.gameSums, dt.yearSums, 25, "TE", season)
   
   list(dt.topQBs, dt.topRBs, dt.topWRs, dt.topTEs)
 }
