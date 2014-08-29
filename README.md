@@ -10,4 +10,4 @@ Also included is a larger data set which spans the full 2000-2013 seasons.
 3. Download their schema from [here](http://www.armchairanalysis.com/DataReference.pdf), (but it is included in the zip file too)
 4. A more detailed explanation of the data (acutally, a subset of the data) is available locally in [code-book.md](./code-book.md)
 
-Along with the data, there is a small R script that will load some of the interesting data, although it does not do much else at this point.
+Along with the data, there are a few R scripts that work with the data.  Executing init.R, and then fantasy-points.R should dump some useful data into the local data directory.
