@@ -1,5 +1,6 @@
 library(plyr)
 
+#dataDirectory = "~/Fantasy-Football/data/nfl_00-15/csv/"
 dataDirectory = "~/Fantasy-Football/data/nfl_sample_data_2015/csv/"
 
 RAW = read.csv(paste(dataDirectory, "PLAYER.csv", sep=""))
@@ -50,9 +51,22 @@ RUSHES = data.frame(
 RUSHES = RUSHES[RUSHES$kne == 0,]
 RUSHES$kne = NULL
 
-RUSH_PLAYS = PLAYS[ PLAYS$type == "RUSH", ]
-RUSH_PLAYS = join( RUSH_PLAYS, RUSHES, by="playid", type="left", match="first")
+RAW = read.csv(paste(dataDirectory, "TD.csv", sep=""))
+TDS = data.frame(
+  playid = RAW$pid,
+  playerid = RAW$player,
+  td = 1
+)
 
+# join and aggregate
+
+RUSH.PLAYS = PLAYS[ PLAYS$type == "RUSH", ]
+RUSH.PLAYS = join( RUSH.PLAYS, RUSHES, by="playid", match="first")
+RUSH.PLAYS = join( RUSH.PLAYS, TDS, by="playid", type="left", match="first")
+RUSH.PLAYS[ is.na(RUSH.PLAYS$td),]$td = 0
+
+RUSH.SUMMARY = ddply( RUSH.PLAYS, .(playerid, gameid), summarize, sum.yds = sum(yds), mean.yds = mean(yds), sd.yds = sd(yds), sum.tds = sum(td) )
+RUSH.SUMMARY = join( RUSH.SUMMARY, PLAYERS, by="playerid", match="first")
 
 
 
