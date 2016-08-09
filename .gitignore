@@ -1,7 +1,8 @@
 # Do not include user's local data or history info (inluding .RData and .Rhistory for RStudio users)
 .*
 
-# Do not include uncompressed data (inefficient, and exceeds GitHub's 100M file limit)
-NFLData_2000-2013/
-NFLData_2012_WK1-8/
-data/
+data/*
+!data/nfl_sample_data_2015
+!data/nfl_sample_data_2015/*
+!data/nfl_sample_data_2015/*/*
+

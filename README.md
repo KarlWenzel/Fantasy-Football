@@ -1,13 +1,11 @@
 ##Fantasy Football with R
 
-NOTE: the raw data inluded in this repo is covered by the [Creative Commons Attribution-Share Alike 3.0 United States license](http://creativecommons.org/licenses/by-sa/3.0/us/)
+NOTE: the raw data inluded in this repo is licensed by Armchair Analysis.com under the [Creative Commons Attribution-Share Alike 4.0 United States license](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 This repo currently is working with a sample data set, using weeks 1-8 of the 2012 NFL season.  This is a smaller data set, and easier to work with while in development mode.
 Also included is a larger data set which spans the full 2000-2013 seasons.
 
-1. The data was acquired from [Armchair Analysis](http://www.armchairanalysis.com/index.php).
-2. You may download the zipped sample data directly from this [link](http://www.armchairanalysis.com/NFLData_2012_WK1-8.zip)
-3. Download their schema from [here](http://www.armchairanalysis.com/DataReference.pdf), (but it is included in the zip file too)
-4. A more detailed explanation of the data (acutally, a subset of the data) is available locally in [code-book.md](./code-book.md)
+1. The data was acquired from [Armchair Analysis](http://armchairanalysis.com/index.php).
+2. You may download the zipped sample data directly from this [link](http://armchairanalysis.com/nfl_sample_data_2015.zip)
+3. Download their schema from [here](http://armchairanalysis.com./2016_AA_Entity_Diagram.pdf), (but it is included in the zip file too)
 
-Along with the data, there are a few R scripts that work with the data.  Executing init.R, and then fantasy-points.R should dump some useful data into the local data directory.
