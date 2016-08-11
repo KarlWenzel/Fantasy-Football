@@ -1,72 +1,92 @@
 library(plyr)
+library(sqldf)
 
-#dataDirectory = "~/Fantasy-Football/data/nfl_00-15/csv/"
-dataDirectory = "~/Fantasy-Football/data/nfl_sample_data_2015/csv/"
+dir.raw.choice = "nfl_sample_data_2015" 
+#dir.raw.choice = "nfl_00-15" 
 
-RAW = read.csv(paste(dataDirectory, "PLAYER.csv", sep=""))
+dir.root = "~/Fantasy-Football/data/"
+dir.raw = paste(dir.root, dir.raw.choice, "/csv/", sep="")
+dir.tidy = paste(dir.root, "/tidy/", sep="")
+
+RAW = read.csv(paste(dir.raw, "PLAYER.csv", sep=""))
 PLAYERS = data.frame(
-  playerid = RAW$player,
+  player.id = RAW$player,
   fname = RAW$fname,
   lname = RAW$lname,
   pos1 = RAW$pos1,
   pos2 = RAW$pos2,
-  age = as.numeric(format(Sys.Date(), "%Y")) - RAW$yob,
-  nflYrs = as.numeric(format(Sys.Date(), "%Y")) - RAW$start,
+  age.yrs = as.numeric(format(Sys.Date(), "%Y")) - RAW$yob,
+  nfl.yrs = as.numeric(format(Sys.Date(), "%Y")) - RAW$start,
   cteam = RAW$cteam
 )
 
-RAW = read.csv(paste(dataDirectory, "GAME.csv", sep=""))
+RAW = read.csv(paste(dir.raw, "GAME.csv", sep=""))
 GAMES = data.frame(
-  gameid = RAW$gid,
+  game.id = RAW$gid,
   seas = RAW$seas,
   wk = RAW$wk,
   v = RAW$v,
   h = RAW$h,
-  vpts = RAW$ptsv,
-  hpts = RAW$ptsh
+  v.pts = RAW$ptsv,
+  h.pts = RAW$ptsh
 )
 
 # NOTE that this frame stores the activty of team on a particular game
-#RAW = read.csv(paste(dataDirectory, "TEAM.csv", sep=""))
-#GAME_TEAMS = data.frame(
-#  gameid = RAW$gid,
+#RAW = read.csv(paste(dir.raw, "TEAM.csv", sep=""))
+#GAME.TEAMS = data.frame(
+#  game.id = RAW$gid,
 #  tname = RAW$tname,
 #  teamid = RAW$tid
 #)
 
-RAW = read.csv(paste(dataDirectory, "PLAY.csv", sep=""))
+RAW = read.csv(paste(dir.raw, "PLAY.csv", sep=""))
 PLAYS = data.frame(
-    playid = RAW$pid,
-    gameid = RAW$gid,
+    play.id = RAW$pid,
+    game.id = RAW$gid,
     type = RAW$type
 )
 
-RAW = read.csv(paste(dataDirectory, "RUSH.csv", sep=""))
-RUSHES = data.frame(
-  playid = RAW$pid,
-  playerid = RAW$bc,
+RAW = read.csv(paste(dir.raw, "PASS.csv", sep=""))
+PASS = data.frame(
+  play.id = RAW$pid,
+  qb.id = RAW$psr,
+  rec.id = RAW$trg,
+  yds = RAW$yds,
+  comp = RAW$comp,
+  spk = RAW$spk
+)
+PASS = PASS[PASS$spk == 0,]
+PASS$spk = NULL
+
+RAW = read.csv(paste(dir.raw, "RUSH.csv", sep=""))
+RUSH = data.frame(
+  play.id = RAW$pid,
+  player.id = RAW$bc,
   yds = RAW$yds,
   kne = RAW$kne
 )
-RUSHES = RUSHES[RUSHES$kne == 0,]
-RUSHES$kne = NULL
+RUSH = RUSH[RUSH$kne == 0,]
+RUSH$kne = NULL
 
-RAW = read.csv(paste(dataDirectory, "TD.csv", sep=""))
+RAW = read.csv(paste(dir.raw, "TD.csv", sep=""))
 TDS = data.frame(
-  playid = RAW$pid,
-  playerid = RAW$player,
+  play.id = RAW$pid,
+  player.id = RAW$player,
   td = 1
 )
 
 # join and aggregate
 
-RUSH.PLAYS = PLAYS[ PLAYS$type == "RUSH", ]
-RUSH.PLAYS = join( RUSH.PLAYS, RUSHES, by="playid", match="first")
-RUSH.PLAYS = join( RUSH.PLAYS, TDS, by="playid", type="left", match="first")
-RUSH.PLAYS[ is.na(RUSH.PLAYS$td),]$td = 0
+RB.PLAYS = PLAYS[ PLAYS$type == "RUSH", ]
+RB.PLAYS = join( RB.PLAYS, RUSH, by="play.id", match="first")
+RB.PLAYS = merge( x=RB.PLAYS, y=TDS, by="play.id", all.x=TRUE)
+RB.PLAYS$player.id = RB.PLAYS$player.id.x
+RB.PLAYS$player.id.x = NULL
+RB.PLAYS$player.id.y = NULL
+RB.PLAYS[ is.na(RB.PLAYS$td),]$td = 0
 
-RUSH.SUMMARY = ddply( RUSH.PLAYS, .(playerid, gameid), summarize, sum.yds = sum(yds), mean.yds = mean(yds), sd.yds = sd(yds), sum.tds = sum(td) )
-RUSH.SUMMARY = join( RUSH.SUMMARY, PLAYERS, by="playerid", match="first")
+RB.SUMMARY = ddply( RB.PLAYS, .(player.id, game.id), summarize, sum.yds = sum(yds), mean.yds = mean(yds), sd.yds = sd(yds), sum.tds = sum(td) )
+RB.SUMMARY = join( RB.SUMMARY, PLAYERS, by="player.id", match="first")
 
 
 
