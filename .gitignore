@@ -2,7 +2,7 @@
 .*
 
 # The Markdown files are proper for Github, but RStudio generates HTML when previewed.
-*.hmtl
+*.html
 
 data/*
 !data/nfl_sample_data_2015
