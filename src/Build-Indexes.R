@@ -8,12 +8,14 @@ stopifnot( exists("PASS") )
 stopifnot( exists("TD") )
 stopifnot( exists("CONV") )
 
-## PX is an index of rushing and passing PLAY records (pid, and gid), joined with TD and TEAM (get both offense and defense)
+## PX is an index of rushing and passing PLAY records (pid, and gid), joined with TD, GAME, and TEAM (get both offense and defense)
 
 PX = PLAY[ PLAY$type %in% c("RUSH", "PASS"), c("gid", "pid", "off", "def", "type", "conv.type", "olid") ]
 
 PX = join( PX, TD[,c("pid","td")], by="pid", match="first")
 PX[ is.na(PX$td), ]$td = 0
+
+PX = join( PX, GAME[,c("gid", "seas", "wk")], by="gid", match="first")
 
 names(TEAM)[ names(TEAM)=="tname"] = "off"
 names(TEAM)[ names(TEAM)=="tid"] = "off.tid"
@@ -28,23 +30,23 @@ names(TEAM)[ names(TEAM)=="def.tid"] = "tid"
 
 ## PRB is an index of rushing plays, joined with RUSH
 
-PRB = PX[ PX$type == "RUSH", c("gid", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
+PRB = PX[ PX$type == "RUSH", c("gid", "seas", "wk", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
 PRB$type = NULL
-PRB = join( PRB, RUSH, by="pid", match="first")
+PRB = join( PRB, RUSH, by="pid", type="inner", match="first")
 PRB$player = PRB$bc
 PRB$bc = NULL
 
 # PQB and PWR and indexes of passing plays joined with PASS. both from the perspective of their respective positions
 
-PQB = PX[ PX$type == "PASS", c("gid", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
+PQB = PX[ PX$type == "PASS", c("gid", "seas", "wk", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
 PQB$type = NULL
-PQB = join( PQB, PASS, by="pid", match="first")
+PQB = join( PQB, PASS, by="pid", type="inner", match="first")
 PQB$player = PQB$psr
 PQB$psr = NULL
 
-PWR = PX[ PX$type == "PASS" , c("gid", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
+PWR = PX[ PX$type == "PASS" , c("gid", "seas", "wk", "pid", "off", "off.tid", "def", "def.tid", "olid", "td") ]
 PWR$type = NULL
-PWR = join( PWR, PASS, by="pid", match="first")
+PWR = join( PWR, PASS, by="pid", type="inner", match="first")
 PWR = PWR[!is.na(PWR$trg) & PWR$trg!="", ]
 PWR$player = PWR$trg
 PWR$trg = NULL
@@ -78,7 +80,7 @@ remove(OC)
 remove(ORG)
 remove(ORT)
 
-POL = join( PX, POL, by="olid", match="all")
+POL = join( PX, POL, by="olid", type="inner", match="all")
 
 # only creates tidy directory if does not exist (but would show warning if it does exist, so surpress)
 

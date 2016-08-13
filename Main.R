@@ -1,5 +1,6 @@
 
 # HOW TO RUN THIS PROGRAM
+# -----------------------
 #
 # First time: 
 #   - make sure dir.root is set to the root diretory of this project
@@ -15,7 +16,7 @@
 dir.root = "~/Fantasy-Football/"
 first.time.run = FALSE
 
-use.sample.data = TRUE
+use.sample.data = FALSE
 load.raw = TRUE
 build.indexes = TRUE
 load.indexes = FALSE
@@ -49,6 +50,8 @@ if (use.sample.data) {
 # Preprocessing
 # -------------
 
+total.start.time = proc.time()
+
 # This step will load a bunch of global variable into memory.
 
 if (load.raw) {
@@ -56,23 +59,40 @@ if (load.raw) {
   # -------
   # BLOCK,CONV,DEFENSE,DRIVE,FGXP,FUMBLE,GAME,INJURY,INTERCPT,KICKER,KOFF,OFFENSE,OLINE,
   # PASS,PENALTY,PLAY,PLAYER,PUNT,REDZONE,RUSH,SACK,SAFETY,SCHEDULE,TACKLE,TD,TEAM
+  
+  print("Loading raw data...")
+  start.time = proc.time()
   source( paste(dir.src, "Load-Raw.R", sep=""))
+  end.time = proc.time() - start.time
+  print( paste("  ...Done. Run time:", end.time["elapsed"], "seconds"))
+  
 }
 
 if (build.indexes) {
   # Builds and saves some indexes that join together some key data
   # ----
   # PX, PRB, PQB, PWR, POL
+  print("Buiding indexes...")
+  start.time = proc.time()
   source( paste(dir.src, "Build-Indexes.R", sep=""))
+  end.time = proc.time() - start.time
+  print( paste("  ...Done. Run time:", end.time["elapsed"], "seconds"))
 }
 
 if (load.indexes) {
   # Same result as rebuilding the indexes, except that loads from file rather than processing from raw
+  print("Loading indexes...")
+  start.time = proc.time()
   source( paste(dir.src, "Load-Indexes.R", sep=""))
+  end.time = proc.time() - start.time
+  print( paste("  ...Done. Run time:", end.time["elapsed"], "seconds"))
 }
 
 # Processing
 # ----------
+
+print("Processing...")
+start.time = proc.time()
 
 # GS = Game Summary
 
@@ -100,9 +120,14 @@ PWR.GS = ddply( PWR, .(player, gid), summarize,
 )
 PWR.GS = join( PWR.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
 
+end.time = proc.time() - start.time
+print( paste("  ...Done. Run time:", end.time["elapsed"], "seconds"))
+
 # Reporting
 # ---------
 
+total.end.time = proc.time() - total.start.time
+print( paste(" Total run time:", total.end.time["elapsed"], "seconds"))
 
 
 

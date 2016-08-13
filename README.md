@@ -1,7 +1,7 @@
 ## Fantasy Football with R
 
 How to run this program
-- To run with sample data, simply clone this repo and run Main.R (read documentation in that file first! you'll need to set a parameter or two)
+- To run with sample data, simply clone this repo and run [Main.R](Main.R) (read documentation in that file first! you'll need to set a parameter or two)
 - To run with the full data set, you will need to purchase this data first.  See below.
 
 NOTE: the raw data inluded in this repo is licensed by Armchair Analysis.com under the [Creative Commons Attribution-Share Alike 4.0 United States license](http://creativecommons.org/licenses/by-nc-sa/4.0/)
