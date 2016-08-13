@@ -33,11 +33,14 @@ if (first.time.run) {
 
 # Only change these if necessary.  These values make assumption about the raw data file structure.
 
+dir.src = paste(dir.root, "src/", sep="")
+
 dir.raw.choice = "data/nfl_00-15/" 
 if (use.sample.data) {
   dir.raw.choice = "data/nfl_sample_data_2015/"   
 }
 dir.raw = paste(dir.root, dir.raw.choice, "csv/", sep="")
+
 dir.tidy = paste(dir.root, "data/tidy/full/", sep="")
 if (use.sample.data) {  
   dir.tidy = paste(dir.root, "data/tidy/sample/", sep="")
@@ -46,24 +49,26 @@ if (use.sample.data) {
 # Preprocessing
 # -------------
 
+# This step will load a bunch of global variable into memory.
+
 if (load.raw) {
   # Loads the following raw data object with a few additional processing steps:
   # -------
   # BLOCK,CONV,DEFENSE,DRIVE,FGXP,FUMBLE,GAME,INJURY,INTERCPT,KICKER,KOFF,OFFENSE,OLINE,
   # PASS,PENALTY,PLAY,PLAYER,PUNT,REDZONE,RUSH,SACK,SAFETY,SCHEDULE,TACKLE,TD,TEAM
-  source( paste(dir.root, "Load-Raw.R", sep=""))
+  source( paste(dir.src, "Load-Raw.R", sep=""))
 }
 
 if (build.indexes) {
   # Builds and saves some indexes that join together some key data
   # ----
   # PX, PRB, PQB, PWR, POL
-  source( paste(dir.root, "Build-Indexes.R", sep=""))
+  source( paste(dir.src, "Build-Indexes.R", sep=""))
 }
 
 if (load.indexes) {
   # Same result as rebuilding the indexes, except that loads from file rather than processing from raw
-  source( paste(dir.root, "Load-Indexes.R", sep=""))
+  source( paste(dir.src, "Load-Indexes.R", sep=""))
 }
 
 # Processing
