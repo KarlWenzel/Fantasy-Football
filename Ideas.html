@@ -147,8 +147,9 @@ hr {
 <p>Calculate something similar to a (+/-) stat like in basketball for each O-Lineman to demonstrate individual impact on rushing and passing
 Use this for predictive analysis on RBs, WRs, and QBs that are playing with a different group of linemen</p>
 
-<p>Does keeping the same group of linemen together from one season to another improve performance?  What about the skill positions + line?
-Look for patterns of injury given age, position, weight, 40 speed, etc.</p>
+<p>Does keeping the same group of linemen together from one season to another improve performance?  What about the skill positions + line?</p>
+
+<p>Look for patterns of injury given age, position, weight, 40 speed, etc.</p>
 
 <ul>
 <li>What about number of snaps, historically?</li>
@@ -159,6 +160,16 @@ Look for patterns of injury given age, position, weight, 40 speed, etc.</p>
 Do factors like weight, strength, 40 speed, etc. </p>
 
 <h3>Approach</h3>
+
+<p>Idea 1: Join up some intermediate indexes with minimal data to get some quick stats</p>
+
+<ul>
+<li>RB.PLAYS (pid, gid, olid, player, yds, td, conv)</li>
+<li>WR.PLAYS (pid, gid, olid, player, comp, yds, td, conv)</li>
+<li>QB.PLAYS (pid, gid, olid, player, comp, yds, td, conv)</li>
+</ul>
+
+<p>Idea 2: Join up large data sets and data mine this stuff, e.g. dimension reduction.</p>
 
 </body>
 

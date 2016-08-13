@@ -14,12 +14,11 @@ first.time.run = FALSE
 
 use.sample.data = TRUE
 reload.raw = TRUE
-rebuild.indexes = FALSE
-reload.indexes = TRUE
+rebuild.indexes = TRUE
+reload.indexes = FALSE
 
 # Notice that most of your user settings will be clobbered (appropriately) if first.time.run is TRUE
 if (first.time.run) {
-  use.sample.data = TRUE
   reload.raw = TRUE
   rebuild.indexes = TRUE
   reload.indexes = FALSE
