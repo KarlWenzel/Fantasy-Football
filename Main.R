@@ -1,7 +1,9 @@
 
 # HOW TO RUN THIS PROGRAM
 #
-# First time: make sure dir.root is set to the root diretory of this project, and set first.time.run to TRUE
+# First time: 
+#   - make sure dir.root is set to the root diretory of this project
+#   - set first.time.run to TRUE
 #
 # Thereafter: if successfully run, much of the processing is saved in intermediary files, plus the original
 #   data is still in memory (unless cleared by the user), so you can set the User Parameters as you like.
@@ -45,23 +47,23 @@ if (use.sample.data) {
 # -------------
 
 if (load.raw) {
-  source( paste(dir.root, "Load-Raw.R", sep=""))
   # Loads the following raw data object with a few additional processing steps:
   # -------
   # BLOCK,CONV,DEFENSE,DRIVE,FGXP,FUMBLE,GAME,INJURY,INTERCPT,KICKER,KOFF,OFFENSE,OLINE,
   # PASS,PENALTY,PLAY,PLAYER,PUNT,REDZONE,RUSH,SACK,SAFETY,SCHEDULE,TACKLE,TD,TEAM
+  source( paste(dir.root, "Load-Raw.R", sep=""))
 }
 
 if (build.indexes) {
-  source( paste(dir.root, "Build-Indexes.R", sep=""))
   # Builds and saves some indexes that join together some key data
   # ----
   # PX, PRB, PQB, PWR, POL
+  source( paste(dir.root, "Build-Indexes.R", sep=""))
 }
 
 if (load.indexes) {
-  source( paste(dir.root, "Load-Indexes.R", sep=""))
   # Same result as rebuilding the indexes, except that loads from file rather than processing from raw
+  source( paste(dir.root, "Load-Indexes.R", sep=""))
 }
 
 # Processing
