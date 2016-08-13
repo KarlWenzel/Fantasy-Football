@@ -1,57 +1,65 @@
-# User Parameters
-# ---------------
 
 # HOW TO RUN THIS PROGRAM
 #
 # First time: make sure dir.root is set to the root diretory of this project, and set first.time.run to TRUE
+#
 # Thereafter: if successfully run, much of the processing is saved in intermediary files, plus the original
 #   data is still in memory (unless cleared by the user), so you can set the User Parameters as you like.
 #
-#
+
+# User Parameters
+# ---------------
 
 dir.root = "~/Fantasy-Football/"
 first.time.run = FALSE
 
 use.sample.data = TRUE
-reload.raw = TRUE
-rebuild.indexes = TRUE
-reload.indexes = FALSE
+load.raw = TRUE
+build.indexes = TRUE
+load.indexes = FALSE
 
-# Notice that most of your user settings will be clobbered (appropriately) if first.time.run is TRUE
+# Notice below that most of your user settings will be clobbered (appropriately) if first.time.run is TRUE
+
 if (first.time.run) {
-  reload.raw = TRUE
-  rebuild.indexes = TRUE
-  reload.indexes = FALSE
+  load.raw = TRUE
+  build.indexes = TRUE
+  load.indexes = FALSE
 }
 
 # System Parameters
 # -----------------
+
+# Only change these if necessary.  These values make assumption about the raw data file structure.
 
 dir.raw.choice = "data/nfl_00-15/" 
 if (use.sample.data) {
   dir.raw.choice = "data/nfl_sample_data_2015/"   
 }
 dir.raw = paste(dir.root, dir.raw.choice, "csv/", sep="")
-dir.tidy = paste(dir.root, "data/tidy/", sep="")
+dir.tidy = paste(dir.root, "data/tidy/full/", sep="")
+if (use.sample.data) {  
+  dir.tidy = paste(dir.root, "data/tidy/sample/", sep="")
+}
 
 # Preprocessing
 # -------------
 
-if (reload.raw) {
+if (load.raw) {
   source( paste(dir.root, "Load-Raw.R", sep=""))
-  #BLOCK,CONV,DEFENSE,DRIVE,FGXP,FUMBLE,GAME,INJURY,INTERCPT,KICKER,KOFF,OFFENSE,OLINE,
-  #PASS,PENALTY,PLAY,PLAYER,PUNT,REDZONE,RUSH,SACK,SAFETY,SCHEDULE,TACKLE,TD,TEAM
+  # Loads the following raw data object with a few additional processing steps:
+  # -------
+  # BLOCK,CONV,DEFENSE,DRIVE,FGXP,FUMBLE,GAME,INJURY,INTERCPT,KICKER,KOFF,OFFENSE,OLINE,
+  # PASS,PENALTY,PLAY,PLAYER,PUNT,REDZONE,RUSH,SACK,SAFETY,SCHEDULE,TACKLE,TD,TEAM
 }
 
-if (rebuild.indexes) {
+if (build.indexes) {
   source( paste(dir.root, "Build-Indexes.R", sep=""))
-  #GP
-  #GRB -- Game results for RB index (pid,gid,off,def,olid,is.conv,dir,yds,succ,player,td,conv)
-  #GQB
-  #GWR
+  # Builds and saves some indexes that join together some key data
+  # ----
+  # PX, PRB, PQB, PWR, POL
 }
 
-if (reload.indexes) {
+if (load.indexes) {
   source( paste(dir.root, "Load-Indexes.R", sep=""))
   # Same result as rebuilding the indexes, except that loads from file rather than processing from raw
 }
@@ -61,29 +69,29 @@ if (reload.indexes) {
 
 # GS = Game Summary
 
-GRB.GS = ddply( GRB, .(player, gid), summarize, 
+PRB.GS = ddply( PRB, .(player, gid), summarize, 
  sum.yds = sum(yds, na.rm=TRUE), 
  mean.yds = mean(yds, na.rm=TRUE), 
  sd.yds = sd(yds, na.rm=TRUE), 
  sum.tds = sum(td, na.rm=TRUE)
 )
-GRB.GS = join( GRB.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
+PRB.GS = join( PRB.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
 
-GQB.GS = ddply( GQB, .(player, gid), summarize, 
+PQB.GS = ddply( PQB, .(player, gid), summarize, 
  sum.yds = sum(yds, na.rm=TRUE), 
  mean.yds = mean(yds, na.rm=TRUE), 
  sd.yds = sd(yds, na.rm=TRUE), 
  sum.tds = sum(td, na.rm=TRUE)
 )
-GQB.GS = join( GQB.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
+PQB.GS = join( PQB.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
 
-GWR.GS = ddply( GWR, .(player, gid), summarize, 
+PWR.GS = ddply( PWR, .(player, gid), summarize, 
   sum.yds = sum(yds, na.rm=TRUE), 
   mean.yds = mean(yds, na.rm=TRUE), 
   sd.yds = sd(yds, na.rm=TRUE), 
   sum.tds = sum(td, na.rm=TRUE)
 )
-GWR.GS = join( GWR.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
+PWR.GS = join( PWR.GS, PLAYER[,c("player","pname","pos1","cteam")], by="player", type="left", match="first")
 
 # Reporting
 # ---------

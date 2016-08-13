@@ -1,6 +1,9 @@
 # Do not include user's local data or history info (inluding .RData and .Rhistory for RStudio users)
 .*
 
+# The Markdown files are proper for Github, but RStudio generates HTML when previewed.
+*.hmtl
+
 data/*
 !data/nfl_sample_data_2015
 !data/nfl_sample_data_2015/*

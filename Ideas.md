@@ -14,10 +14,9 @@ Do factors like weight, strength, 40 speed, etc. shift the curve?
 
 ### Approach
 
-Idea 1: Join up some intermediate indexes with minimal data to get some quick stats
+Idea 1: Join up some intermediate indexes with minimal data to get some quick stats. Note: An effort has been made towards this.  See Build-Index.R
 - RB PLAYS (pid, gid, olid, player, yds, td, conv)
 - WR PLAYS (pid, gid, olid, player, comp, yds, td, conv)
 - QB PLAYS (pid, gid, olid, player, comp, yds, td, conv)
-Note: An effort has been made towards this.  See Build-Index.R
 
 Idea 2: Join up large data sets and data mine this stuff, e.g. dimension reduction.
