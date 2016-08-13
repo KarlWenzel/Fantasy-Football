@@ -71,6 +71,11 @@ PENALTY = data.frame(
 PLAY = data.frame(
   read.csv(paste(dir.raw, "PLAY.csv", sep=""))
 )
+names(CONV)[2] = "conv.type"
+PLAY = join(PLAY, CONV[, c("pid", "conv.type")], by="pid", match="first")
+levels(PLAY$conv.type)[ length(levels(PLAY$conv.type)) + 1] = "NONE"
+PLAY[ is.na(PLAY$conv.type), ]$conv.type = "NONE"
+names(CONV)[2] = "type"
 
 PLAYER = data.frame(
   read.csv(paste(dir.raw, "PLAYER.csv", sep=""))
