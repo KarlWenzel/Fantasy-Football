@@ -11,5 +11,9 @@ This repo currently is working with a sample data set, using same data (week 17 
 1. The data was acquired from [Armchair Analysis](http://armchairanalysis.com/index.php).
 2. You may download the zipped sample data directly from this [link](http://armchairanalysis.com/nfl_sample_data_2015.zip)
 
-Some [ideas](Ideas.md) to investigate.
+Currently this is a work in project.  The current TODO list is [here](https://github.com/KarlWenzel/Fantasy-Football/issues)
+
+#### Results
+
+Presently there is a [very basic predictive model for RBs](src/Base-Prediction-Confidence.Rmd)
 
