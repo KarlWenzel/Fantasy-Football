@@ -15,5 +15,5 @@ Currently this is a work in project.  The current TODO list is [here](https://gi
 
 #### Results
 
-Presently there is a [very basic predictive model for RBs](src/Base-Prediction-Confidence.Rmd)
+Presently there is a [very basic predictive model for RBs](src/Base-Prediction-Confidence.md)
 
