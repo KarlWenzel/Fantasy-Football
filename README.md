@@ -15,5 +15,5 @@ Currently this is a work in project.  The current TODO list is [here](https://gi
 
 #### Results
 
-Presently there is a [very basic predictive model for RBs](src/Base-Prediction-Confidence.md)
+Presently there is a [very basic predictive model for yards by RBs, WRs, and QBs](src/Base-Prediction-Confidence.md)
 

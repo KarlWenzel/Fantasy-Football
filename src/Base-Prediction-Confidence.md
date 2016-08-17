@@ -9,6 +9,8 @@ output: html_document
 
 In this document we shall try to predict how many yards a running back will run over the course of an entire season.  We shall use the players' previous season total yards amount as the primary independent variable, and the current year total yards as the dependent variable.  We shall also consider the number of games played as independent variables for our model as we progress.
 
+### Running Backs
+
 
 ```r
 library(plyr)
@@ -108,21 +110,55 @@ print(paste(c2.percent, "% of variance explained by model.", sep=""))
 ```r
 # 3rd attempt: given know prev total yards, prev games played, number of current games played, predict current yards
 
-c3 = lm( formula = curr.yds ~ prev.yds + prev.games + curr.games, data = b)
-c3.percent = round(summary(c3)$r.squared * 100, digits=2)
-print(paste(c3.percent, "% of variance explained by model.", sep=""))
+c3.rb = lm( formula = curr.yds ~ prev.yds + prev.games + curr.games, data = b)
+c3.rb.percent = round(summary(c3.rb)$r.squared * 100, digits=2)
+print(paste(c3.rb.percent, "% of variance explained by model.", sep=""))
 ```
 
 ```
 ## [1] "63.17% of variance explained by model."
 ```
 
-```r
-# The final attempt does a pretty decent job trying to predict, however it shows how
-# important it is to know properly guess many games a player will play in the current season.
-# Here's more details of the linear model:
+### Wide Recievers
 
-print(summary(c3))
+
+```
+## [1] "c1: 25.98% of variance explained by model."
+```
+
+```
+## [1] "c2: 35.8% of variance explained by model."
+```
+
+```
+## [1] "c3: 61.24% of variance explained by model."
+```
+
+### Quarterbacks
+
+
+```
+## [1] "c1: 35.17% of variance explained by model."
+```
+
+```
+## [1] "c2: 31.5% of variance explained by model."
+```
+
+```
+## [1] "c3: 93.43% of variance explained by model."
+```
+
+### What do the Results Means?
+
+The third linear model (c3) was far more effective, however it has an unfair advantage because it knows how many
+games the player will participate in during the current year. Predicting the number of games that a player will participate in
+will be modeled separately, mainly by predicting injuries.  
+What follows below is a more detailed inspection of the linear model that was used to predict RB performance.
+
+
+```r
+print(summary(c3.rb))
 ```
 
 ```
@@ -149,9 +185,9 @@ print(summary(c3))
 ```
 
 ```r
-plot(c3)
+plot(c3.rb)
 ```
 
-![plot of chunk RB-Prediction-LM](figure/RB-Prediction-LM1.png) ![plot of chunk RB-Prediction-LM](figure/RB-Prediction-LM2.png) ![plot of chunk RB-Prediction-LM](figure/RB-Prediction-LM3.png) ![plot of chunk RB-Prediction-LM](figure/RB-Prediction-LM4.png) 
+![plot of chunk RB-Prediction-LM-Results](figure/RB-Prediction-LM-Results1.png) ![plot of chunk RB-Prediction-LM-Results](figure/RB-Prediction-LM-Results2.png) ![plot of chunk RB-Prediction-LM-Results](figure/RB-Prediction-LM-Results3.png) ![plot of chunk RB-Prediction-LM-Results](figure/RB-Prediction-LM-Results4.png) 
 
 

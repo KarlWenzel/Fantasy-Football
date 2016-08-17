@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 In this document we shall try to predict how many yards a running back will run over the course of an entire season.  We shall use the players' previous season total yards amount as the primary independent variable, and the current year total yards as the dependent variable.  We shall also consider the number of games played as independent variables for our model as we progress.
 
+### Running Backs
+
 ```{r RB-Prediction}
 
 library(plyr)
@@ -68,16 +70,112 @@ print(paste(c2.percent, "% of variance explained by model.", sep=""))
       
 # 3rd attempt: given know prev total yards, prev games played, number of current games played, predict current yards
 
+c3.rb = lm( formula = curr.yds ~ prev.yds + prev.games + curr.games, data = b)
+c3.rb.percent = round(summary(c3.rb)$r.squared * 100, digits=2)
+print(paste(c3.rb.percent, "% of variance explained by model.", sep=""))
+```
+
+### Wide Recievers
+
+```{r echo=FALSE}
+PWR = data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/tidy/full/PWR.csv"))
+a = PWR[ PWR$wk <= 17, ]
+a = ddply(a, .(player,seas), summarize, yds = sum(yds, na.rm=TRUE), tds = sum(td, na.rm=TRUE), games = length(unique(gid)) )
+a$avg.yds = a$yds / a$games
+b = data.frame( player=factor() )
+
+for (s in 2001:2015) {
+  
+  a1 = a[ a$seas == (s-1) & a$yds > 500, c("player", "yds", "tds", "games", "avg.yds") ]
+  a2 = a[ a$seas == s, c("player", "yds", "tds", "games", "avg.yds") ]  
+  
+  names(a1)[2] = "prev.yds"
+  names(a1)[3] = "prev.tds"
+  names(a1)[4] = "prev.games"
+  names(a1)[5] = "prev.avg.yds"  
+  names(a2)[2] = "curr.yds"
+  names(a2)[3] = "curr.tds"
+  names(a2)[4] = "curr.games"
+  names(a2)[5] = "curr.avg.yds"  
+  
+  bx = join( a1, a2, by="player", type="inner")
+  bx$seas = s  
+  b = rbind( b, bx)
+}
+
+c1 = lm( formula = curr.yds ~ prev.yds, data = b )
+c1.percent = round(summary(c1)$r.squared * 100, digits=2)
+print(paste("c1: ", c1.percent, "% of variance explained by model.", sep=""))
+
+# 2nd attempt: predict average yards per game played instead of total yards (hopefully reduce impact of injuries)
+
+c2 = lm( formula = curr.avg.yds ~ prev.avg.yds, data = b )
+c2.percent = round(summary(c2)$r.squared * 100, digits=2)
+print(paste("c2: ", c2.percent, "% of variance explained by model.", sep=""))
+
+# 3rd attempt: given know prev total yards, prev games played, number of current games played, predict current yards
+
 c3 = lm( formula = curr.yds ~ prev.yds + prev.games + curr.games, data = b)
 c3.percent = round(summary(c3)$r.squared * 100, digits=2)
-print(paste(c3.percent, "% of variance explained by model.", sep=""))
+print(paste("c3: ", c3.percent, "% of variance explained by model.", sep=""))
+```
 
-# The final attempt does a pretty decent job trying to predict, however it shows how
-# important it is to know properly guess many games a player will play in the current season.
-# Here's more details of the linear model:
+### Quarterbacks
 
-print(summary(c3))
-plot(c3)
+```{r echo=FALSE}
+PQB= data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/tidy/full/PQB.csv"))
+a = PQB[ PWR$wk <= 17, ]
+a = ddply(a, .(player,seas), summarize, yds = sum(yds, na.rm=TRUE), tds = sum(td, na.rm=TRUE), games = length(unique(gid)) )
+a$avg.yds = a$yds / a$games
+b = data.frame( player=factor() )
+
+for (s in 2001:2015) {
+  
+  a1 = a[ a$seas == (s-1) & a$yds > 500, c("player", "yds", "tds", "games", "avg.yds") ]
+  a2 = a[ a$seas == s, c("player", "yds", "tds", "games", "avg.yds") ]  
+  
+  names(a1)[2] = "prev.yds"
+  names(a1)[3] = "prev.tds"
+  names(a1)[4] = "prev.games"
+  names(a1)[5] = "prev.avg.yds"  
+  names(a2)[2] = "curr.yds"
+  names(a2)[3] = "curr.tds"
+  names(a2)[4] = "curr.games"
+  names(a2)[5] = "curr.avg.yds"  
+  
+  bx = join( a1, a2, by="player", type="inner")
+  bx$seas = s  
+  b = rbind( b, bx)
+}
+
+c1 = lm( formula = curr.yds ~ prev.yds, data = b )
+c1.percent = round(summary(c1)$r.squared * 100, digits=2)
+print(paste("c1: ", c1.percent, "% of variance explained by model.", sep=""))
+
+# 2nd attempt: predict average yards per game played instead of total yards (hopefully reduce impact of injuries)
+
+c2 = lm( formula = curr.avg.yds ~ prev.avg.yds, data = b )
+c2.percent = round(summary(c2)$r.squared * 100, digits=2)
+print(paste("c2: ", c2.percent, "% of variance explained by model.", sep=""))
+
+# 3rd attempt: given know prev total yards, prev games played, number of current games played, predict current yards
+
+c3 = lm( formula = curr.yds ~ prev.yds + prev.games + curr.games, data = b)
+c3.percent = round(summary(c3)$r.squared * 100, digits=2)
+print(paste("c3: ", c3.percent, "% of variance explained by model.", sep=""))
+```
+
+### What do the Results Means?
+
+The third linear model (c3) was far more effective, however it has an unfair advantage because it knows how many
+games the player will participate in during the current year. Predicting the number of games that a player will participate in
+will be modeled separately, mainly by predicting injuries.  
+What follows below is a more detailed inspection of the linear model that was used to predict RB performance.
+
+```{r RB-Prediction-LM-Results}
+
+print(summary(c3.rb))
+plot(c3.rb)
 
 ```
 

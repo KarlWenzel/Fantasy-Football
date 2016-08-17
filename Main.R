@@ -5,6 +5,7 @@
 # First time: 
 #   - make sure dir.root is set to the root diretory of this project
 #   - set first.time.run to TRUE
+#   - unless you feel lucky, you should probably set use.sample.data=TRUE also (full data takes minutes to run)
 #
 # Thereafter: if successfully run, much of the processing is saved in intermediary files, plus the original
 #   data is still in memory (unless cleared by the user), so you can set the User Parameters as you like.
@@ -17,9 +18,9 @@ dir.root = "~/Fantasy-Football/"
 first.time.run = FALSE
 
 use.sample.data = FALSE
-load.raw = TRUE
-build.indexes = TRUE
-load.indexes = FALSE
+load.raw = FALSE
+build.indexes = FALSE
+load.indexes = TRUE
 
 # Notice below that most of your user settings will be clobbered (appropriately) if first.time.run is TRUE
 
