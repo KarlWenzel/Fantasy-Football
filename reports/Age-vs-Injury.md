@@ -1,0 +1,57 @@
+---
+title: "Age vs Injury"
+author: "Karl Wenzel"
+date: "August 22, 2016"
+output: html_document
+---
+
+
+
+Investigate how age affects injury rates.
+
+### Running Backs
+
+
+```r
+library(plyr)
+GAME = data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/nfl_00-15/csv//GAME.csv"))
+INJURY = data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/nfl_00-15/csv//INJURY.csv"))
+PLAYER = data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/nfl_00-15/csv//PLAYER.csv"))
+PRB = data.frame(read.csv("C:/Users/karl/Documents/Fantasy-Football/data/tidy/full/PRB.csv"))
+
+x1 = join( GAME[,c("gid","seas","wk")], INJURY[,c("gid","player","gstat")], by="gid", type="inner")
+
+x2 = ddply( x1, .(player, seas), summarize, days.out = sum(gstat=="Out"), days.ques = sum(gstat=="Questionable" ))
+
+x3 = ddply( PRB, .(player, seas), summarize, games = length(unique(gid)))
+
+x4 = join( x3, x2, by=c("player", "seas") )
+x4[ is.na(x4$days.out), ]$days.out = 0
+x4[ is.na(x4$days.ques), ]$days.ques = 0
+
+x5 = join( x4, PLAYER, by="player")
+x5$age = x5$seas - x5$yob
+x5$out.ratio = (x5$games - x5$days.out) / x5$games
+x5$ques.ratio = (x5$games - x5$days.ques) / x5$games
+
+lm.out = lm( formula = out.ratio ~ age, data = x5 )
+lm.ques = lm( formula = ques.ratio ~ age, data = x5 )
+
+lm.out.percent = round(summary(lm.out)$r.squared * 100, digits=2)
+lm.ques.percent = round(summary(lm.ques)$r.squared * 100, digits=2)
+
+print(paste(lm.out.percent, "% of variance of 'Out' injury status explained by player age", sep=""))
+```
+
+```
+## [1] "0.02% of variance of 'Out' injury status explained by player age"
+```
+
+```r
+print(paste(lm.ques.percent, "% of variance of 'Questionable' injury status explained by player age", sep=""))
+```
+
+```
+## [1] "0% of variance of 'Questionable' injury status explained by player age"
+```
+Wow.. So zero correlation between age and injury.  This is backed up by [rotoworld](http://www.rotoworld.com/articles/nfl/55671/81/the-injury-age-misconception).

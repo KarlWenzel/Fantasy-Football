@@ -15,5 +15,8 @@ Currently this is a work in project.  The current TODO list is [here](https://gi
 
 #### Results
 
-Presently there is a [very basic predictive model for yards by RBs, WRs, and QBs](src/Base-Prediction-Confidence.md)
+Presently there is a [very basic predictive model for yards by RBs, WRs, and QBs](reports/Base-Prediction-Confidence.md)
 
+Age seems to be a factor in production, but not in injury probability
+- [Age production curves](reports/Age-Production-Curve.md)
+- [Age vs Injury](reports/Age-vs-Injury.md)
