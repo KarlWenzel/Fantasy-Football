@@ -42,14 +42,19 @@ for (s in 2001:2015) {
 x = join( b, PLAYER, by="player")
 x$age = x$seas - x$yob
 
+lm0 = lm( formula = curr.games ~ age, data = x)
 lm1 = lm( formula = curr.games ~ prev.games, data = x )
 lm2 = lm( formula = curr.games ~ prev.games + age, data = x )
 
+lm0.percent = round(summary(lm0)$r.squared * 100, digits=2)
 lm1.percent = round(summary(lm1)$r.squared * 100, digits=2)
 lm2.percent = round(summary(lm2)$r.squared * 100, digits=2)
 
-print(paste(lm1.percent, "% of variance games played per season explained by previous year's games played", sep=""))
-print(paste(lm2.percent, "% of variance games played per season explained by previous year's games played AND player age", sep=""))
-
 ```
-Wow.. So basically < 1% improvement to our model by accounting for age.  This is backed up by [rotoworld](http://www.rotoworld.com/articles/nfl/55671/81/the-injury-age-misconception).
+#### Results
+
+- `r lm0.percent` % of variance games played per season explained by player's age
+- `r lm1.percent` % of variance games played per season explained by previous year's games played
+- `r lm2.percent` % of variance games played per season explained by previous year's games played AND player age
+
+Wow.. So basically < 1% improvement to our model by accounting for age.  This finding matches what the stat guys determined at [rotoworld](http://www.rotoworld.com/articles/nfl/55671/81/the-injury-age-misconception).
