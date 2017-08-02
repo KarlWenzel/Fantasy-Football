@@ -55,9 +55,9 @@ OFFENSE = data.frame(
   read.csv(paste(dir.raw, "OFFENSE.csv", sep=""))
 )
 
-OLINE = data.frame(
-  read.csv(paste(dir.raw, "OLINE.csv", sep=""))
-)
+#OLINE = data.frame(
+#  read.csv(paste(dir.raw, "OLINE.csv", sep=""))
+#)
 
 PASS = data.frame(
   read.csv(paste(dir.raw, "PASS.csv", sep=""))
